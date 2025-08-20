@@ -3,6 +3,7 @@ const Question = require('./models/Question');
 
 const seed = async () => {
     await Question.deleteMany({});
+
     await Question.create([
         {
             text: "What is the capital of France?",
@@ -15,8 +16,15 @@ const seed = async () => {
             options: ["2", "3", "4", "5"],
             correctAnswers: [0, 1, 3],
             type: "multi"
+        },
+        {
+            text: "Fill in the blank: The largest planet is ______.",
+            options: [],
+            correctAnswers: ["Jupiter"],
+            type: "fill"
         }
     ]);
+
     console.log("DB seeded!");
     mongoose.disconnect();
 };

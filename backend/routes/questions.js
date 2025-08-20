@@ -20,9 +20,18 @@ router.post('/submit', async (req, res) => {
     for (const ans of answers) {
         const q = await Question.findById(ans.questionId);
         if (!q) continue;
-        const correct = JSON.stringify(ans.selectedOptions.sort()) === JSON.stringify(q.correctAnswers.sort());
-        if (correct) score += 1;
+
+        if (q.type === 'single' || q.type === 'multi') {
+            const correct = JSON.stringify(ans.selectedOptions.sort()) === JSON.stringify(q.correctAnswers.sort());
+            if (correct) score += 1;
+        }
+        else if (q.type === 'fill') {
+            const userInput = (ans.fillAnswer || '').trim().toLowerCase();
+            const correctInputs = q.correctAnswers.map(ca => ca.toLowerCase());
+            if (correctInputs.includes(userInput)) score += 1;
+        }
     }
+
     res.json({ score, total: answers.length });
 });
 
